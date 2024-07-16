@@ -116,8 +116,8 @@ def vis_mean_level(counts,vis_legend = False,gene_of_interest = None, gene_names
     for i in range(Nt):
 
         for j in gene_of_interest:
-            mean_level[i,j] = np.mean(counts[i][j,:].detach().numpy())
-            sd_level[i,j] = np.std(counts[i][j,:].detach().numpy())
+            mean_level[i,j] = np.mean(counts[i][j,:])#.detach().numpy())
+            sd_level[i,j] = np.std(counts[i][j,:])#.detach().numpy())
 
 
     plt.subplot(1,2,1)
