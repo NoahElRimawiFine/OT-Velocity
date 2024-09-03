@@ -8,4 +8,10 @@ __pycache__/
 README.html
 *.ipynb_checkpoints
 *checkpoint.ipynb
+.virtual_documents/
 Data/
+README_files/libs/bootstrap/bootstrap-icons.woff
+Scripts/.ipynb_checkpoints/Kouno-myVelo-checkpoint.ipynb
+Utils/.ipynb_checkpoints/utils_Velo-checkpoint.py
+Utils/.ipynb_checkpoints/test_batch_HARISSA-checkpoint.py
+
