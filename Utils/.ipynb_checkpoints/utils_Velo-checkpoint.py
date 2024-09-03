@@ -289,7 +289,7 @@ def solve_prior(counts, counts_pca, Nt, labels, eps_samp, alpha=0.5):
         # from utils import compute_graph_distances
         M = ot.dist( counts_pca[:,idx_t].T, counts_pca[:,idx_t1].T)
         #M = ot.dist( X1, X2)
-        print(X1.shape)
+        #print(X1.shape)
         M = M/M.max()
         
         
@@ -467,16 +467,14 @@ def OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, no
         
         
         
-        if elastic_Net == False:
+        if elastic_Net == True:
             
             # Just the correlation approach
             
             #corr_slice[t] = np.zeros( (n,n) )
             #if lags == False:
             #    corr_slice[t][np.ix_(g_s,g_t)] = np.dot( velocities_all_signed_norm[t][g_s,:],Ts_prior[t] ).dot( velocities_all_signed_norm[t+1][g_t,:].T )/(Nt-1)
-            print('correlation')
             
-        else:
             corr_slice[t] = np.zeros( (n,n))
             # Granger causality via LASSO
             

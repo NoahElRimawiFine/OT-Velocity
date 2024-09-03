@@ -259,7 +259,7 @@ def batch_test_BEELINE(example, seeds, modality='Corr',dropout=None, branch_no=-
                 FileOurs = FileOurs + '.npy'
             else:
                 FileOurs = FileOurs + '_'+str(branch_no)+'.npy'
-            print(Tv_total)
+            #print(Tv_total)
             np.save(FileOurs, Tv_total)
        
         # Load truth of graph
@@ -366,7 +366,7 @@ def tune_regression( example, seeds, branch_no = -1, eps_samp=1E-2, eps_feat=1E-
             idx = np.where(time == time_pts[i])[0]
             counts_all[i] = torch.tensor( counts[:,idx])
             nums[i] = len(idx)
-        print(nums)
+        #print(nums)
         s_cum = np.array( [0]+list( np.cumsum( nums)) )
         for i in range(Nt):
             labels[0,s_cum[i]:s_cum[i+1]] = i
@@ -415,7 +415,7 @@ def tune_regression( example, seeds, branch_no = -1, eps_samp=1E-2, eps_feat=1E-
 
 
 def load_others_result_BEELINE(example, method, seeds, eps_samp=None, alpha=None, eps_feat=None, dropout=None, combine='max',l1=None,lam=None, sign = None, penalty='EN',branch=True ):
-    print(str(dropout)+' '+',branch '+str(branch) )
+    #print(str(dropout)+' '+',branch '+str(branch) )
     if method == 'OTVelo-Corr' or method == 'OTVelo-Granger':
         eps_feat = None
         combine = 'sum'

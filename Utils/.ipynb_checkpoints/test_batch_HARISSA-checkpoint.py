@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 import sys
+import os
 
 import utils_Velo
 
@@ -25,12 +26,11 @@ from utils import *
 import scipy
 import matplotlib.pyplot as plt
 
-import torch
 import evaluation_metrics
 from evaluation_metrics import evaluate_AUC, early_precision#,stability
 
 
-def batch_test(example, seeds, eps_samp=1E-2, eps_feat=1E-2, alpha=0.5, corr_OT=False, save=False, tuning=False, lags=False, penalty='l1'):
+def batch_test(example, seeds, eps_samp=1E-2, l1=1E-2, alpha=0.5, save=False, tuning=False, modality='Corr', penalty='EN'):
     AUROC = [0]*len(seeds)
     AUPRC = [0]*len(seeds)
     counter = 0
@@ -93,41 +93,43 @@ def batch_test(example, seeds, eps_samp=1E-2, eps_feat=1E-2, alpha=0.5, corr_OT=
         
         
         
-        if corr_OT == False:
+        if modality == 'Granger':
            
-            if penalty == 'l1':
-                Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=1.0, signed=False )
-            elif penalty == 'l1_signed':
+            if penalty == 'LASSO':
+                Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=1.0, signed=True )
+            elif penalty == 'EN':
                 Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=0.5, signed=True )
-            elif penalty == 'l2_signed':
+            elif penalty == 'Ridge':
                  Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=0.0, signed=True )
-            elif penalty == 'tune_signed':
+            elif penalty == 'CV':
                 Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=True, signed=True )
             else:
-                Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, corr_type=corr_type, elastic_Net=True,tune=False,l1_opt=eps_feat )
-            if penalty == 'l1':
-                for i in range(n):
-                    for j in range(n):
-                        if Tv_corr[i,j] < 0:
-                            Tv_total[i,j] = -Tv_total[i,j]
+                Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=eps_feat )
+            
         else:
-            Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True, lags=lags )
+            Tv_total = OT_lagged_correlation(velocities_all_signed, velocities_signed, Ts_prior, stimulation=True )
         
             
         Tv_total = Tv_total - np.diag( np.diag( Tv_total ))
         
         if save:
-            if corr_OT == False:
+            if modality == 'Granger':
                 if penalty is not None:
-                    FileOurs = '../Data/HARISSA/'+example+'/Ours/score_'+str(s)+'penalty'+penalty+'.npy'
-                else:
-                    FileOurs = '../Data/HARISSA/'+example+'/Ours/score_'+str(s)+'_l1_'+str(eps_feat)+'.npy'
-                if tuning:
-                    FileOurs = '../Data/HARISSA/'+example+'/Ours/score_'+str(s)+'_alpha_'+str(alpha)+'_epscell_'+str(eps_samp)+'_epsgene_'+str(eps_feat)+'.npy'
+                    PATH = '../Data/HARISSA/'+example+'/OTVelo-Granger'
+                    if not os.path.exists(PATH):
+                        
+                        os.makedirs(PATH)
+                    FileOurs = PATH+'/score_'+str(s)+'penalty'+penalty+'.npy'
+                
+                
             else:
-                FileOurs = '../Data/HARISSA/'+example+'/Ours_Corr/score_'+str(s)+'.npy'
+                PATH = '../Data/HARISSA/'+example+'/OTVelo-Corr'
+                if not os.path.exists(PATH):
+                        
+                    os.makedirs(PATH)
+                FileOurs = PATH + '/score_'+str(s)+'.npy'
                 if tuning:
-                    FileOurs = '../Data/HARISSA/'+example+'/Ours_Corr/score_'+str(s)+'_alpha_'+str(alpha)+'_eps_'+str(eps_samp)+'.npy'                 
+                    FileOurs = PATH+'/score_'+str(s)+'_alpha_'+str(alpha)+'_eps_'+str(eps_samp)+'.npy'                 
             np.save(FileOurs, Tv_total)
         
         Tv_total = np.abs( Tv_total )
@@ -202,52 +204,64 @@ def tune_regression( example, seeds, eps_samp=1E-2, alpha=0.5, save=False, lambd
                 velocities_signed_copy = copy.deepcopy( velocities_signed )
                 
                 Tv_total = OT_lagged_correlation(velocities_all_signed_copy, velocities_signed_copy, Ts_prior, stimulation=True, elastic_Net=True,tune=False,l1_opt=l1, alpha_opt=a,signed=True )
-                FileOurs = '../Data/HARISSA/'+example+'/Ours/score_'+str(s)+'_lam_'+str(a)+'_l1_'+str(l1)+'.npy'                 
+                FileOurs = '../Data/HARISSA/'+example+'/OTVelo-Granger/score_'+str(s)+'_lam_'+str(a)+'_l1_'+str(l1)+'.npy'                 
                 np.save(FileOurs, Tv_total)
 
 
 
 
-def load_others_result(example, method, seeds, eps_samp=None, alpha=None, eps_feat=None, OT_corr = False, sign=None, penalty='l1', l1=None, lam=None, tune=False):
+def load_others_result(example, method, seeds, eps_samp=None, alpha=None, eps_feat=None,  sign=None, penalty='l1', l1=None, lam=None, tune=False):
     AUROC = [0]*len(seeds)
     AUPRC = [0]*len(seeds)
     EP = [0]*len(seeds)
     #print( len( AUPRC) )
     counter = 0
     
-    if example in ['FN4','CN5','BN8','FN8']:
-        # These datasets use the identical graph
-        FileTruth =  '../Data/HARISSA/'+example+'/True/inter_signed.npy'
-        Tv_true = np.load(FileTruth)
-          
-        Tv_true = Tv_true - np.diag( np.diag(Tv_true) )
+    
         
     
     
     for s in seeds:
-        if example[0:4] == 'Tree':
+
+        # Load ground truth
+        
+        if example in ['FN4','CN5','BN8','FN8']:
+            # These datasets use the identical graph
+            FileTruth =  '../Data/HARISSA/'+example+'/True/inter_signed.npy'
+            Tv_true = np.load(FileTruth)
+              
+            Tv_true = Tv_true - np.diag( np.diag(Tv_true) )
+        
+        elif example[0:4] == 'Tree':
             FileTruth =  '../Data/HARISSA/'+example+'/True/inter_'+str(s)+'.npy'
             Tv_true = np.load(FileTruth)
            
             Tv_true = Tv_true - np.diag( np.diag(Tv_true) )
-            
+
+        # Load resulting weight matrix
+        
         if eps_samp == None or alpha == None:
-            if method != 'Ours':
+            if method != 'OTVelo-Granger' and method != 'OTVelo-CV':
                 FileResult = '../Data/HARISSA/'+example+'/'+method+'/score_'+str(s)+'.npy'
             else:
-                FileResult = '../Data/HARISSA/'+example+'/Ours/score'+'_'+str(s)+'penalty'+penalty+'.npy'
-                #print( np.load(FileResult) )
-        elif tune == True and method == 'Ours_corr':
+                # This requires specifying the regularization for regression step
+                
+                FileResult = '../Data/HARISSA/'+example+'/'+method+'/score'+'_'+str(s)+'penalty'+penalty+'.npy'
+                
+        elif tune == True and method == 'OTVelo-Corr':
             FileResult = '../Data/HARISSA/'+example+'/'+method+'/score_'+str(s)+'_alpha_'+str(alpha)+'_eps_'+str(eps_samp)+'.npy'
-        if tune and method == 'Ours':
-            FileResult = '../Data/HARISSA/'+example+'/Ours/score_'+str(s)+'_lam_'+str(lam)+'_l1_'+str(l1)+'.npy' 
+        
+        if tune == True and method == 'OTVelo-Granger':
+            FileResult = '../Data/HARISSA/'+example+'/OTVelo-Granger/score_'+str(s)+'_lam_'+str(lam)+'_l1_'+str(l1)+'.npy' 
             
         
-
+        #print(FileResult)
         Tv_total = np.load(FileResult)
+
+        # This is what CARDAMOM script does
         
-        if method == 'GENIE3':
-            Tv_total = Tv_total.T
+        # if method == 'GENIE3':
+        #     Tv_total = Tv_total.T
         
         
         Tv_total = Tv_total - np.diag( np.diag( Tv_total ))
