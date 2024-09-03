@@ -16,7 +16,7 @@ to install all the required packages.
 
 ## Example
 
-An example for demonstration can be found from `Scripts/Demo.ipynb`.
+An example for demonstration can be found from `Scripts/Demo.ipynb`. It provides details for running the algorithm, visualizing the resulting vector field and graphs, as well as computations of metrics.
 
 ## Reproduce results
 

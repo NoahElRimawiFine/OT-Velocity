@@ -1,0 +1,11 @@
+*csv
+*txt
+__pycache__/
+*npy
+*.DS_Store
+*js
+*css
+README.html
+*.ipynb_checkpoints
+*checkpoint.ipynb
+Data/
