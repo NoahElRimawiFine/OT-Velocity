@@ -1,7 +1,7 @@
 *csv
 *txt
 __pycache__/
-*npy
+#*npy
 *.DS_Store
 *js
 *css
@@ -9,7 +9,7 @@ README.html
 *.ipynb_checkpoints
 *checkpoint.ipynb
 .virtual_documents/
-Data/
+#Data/
 README_files/libs/bootstrap/bootstrap-icons.woff
 Scripts/.ipynb_checkpoints/Kouno-myVelo-checkpoint.ipynb
 Utils/.ipynb_checkpoints/utils_Velo-checkpoint.py
