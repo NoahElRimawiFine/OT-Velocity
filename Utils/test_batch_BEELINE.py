@@ -245,9 +245,9 @@ def batch_test_BEELINE(example, seeds, modality='Corr',dropout=None, branch_no=-
                     FileOurs = '../Data/Curated/'+example+'/'+example+'-2000-'+str(s)+'/OTVelo-Corr'
                 else:
                     FileOurs = '../Data/Curated/'+example+'/'+example+'-2000-'+str(s)+'-'+str(dropout)+'/OTVelo-Corr'
-                if not os.path.exists(FileOurs):
+                #if not os.path.exists(FileOurs):
                         
-                    os.makedirs(FileOurs)
+                #    os.makedirs(FileOurs)
                     
                 
                 if tuning:
@@ -542,14 +542,7 @@ def load_others_result_BEELINE(example, method, seeds, eps_samp=None, alpha=None
                                 Tv_total[i,j] = Tv_total[i,j] + Tv_total_branch[br][i,j]
             
         
-        # if method == 'Ours_corr':
-        #     plt.subplot(1,2,1)
-        #     plt.imshow(Tv_total)
-        #     Tv_total = np.zeros( (n,n) )
-        #     for br in range(branches):
-        #         Tv_total = Tv_total + Tv_total_branch[br]
-        #     plt.subplot(1,2,2)
-        #     plt.imshow(Tv_total)
+      
         
         
         # print(Tv_total.shape)
