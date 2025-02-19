@@ -1,6 +1,6 @@
 # OT-Velocity
 
-This repo hosts scripts of OTVelo, a software for gene regulatory network inference from time-stamped gene expresssion matrices. Add link to preprint here.
+This repo hosts scripts of OTVelo, a software for gene regulatory network inference from time-stamped gene expresssion matrices. Paper link: https://www.biorxiv.org/content/10.1101/2024.09.12.612590v1
 
 ## Introduction and overview
 
@@ -8,15 +8,14 @@ We introduce a framework for inferring the gene regulatory network (GRN) from ti
 
 ![](Figures/FlowChart.png)
 
+## Tutorial notebook
+
+An example for demonstration can be found from `Tutorial.ipynb`. It provides details for running the algorithm, visualizing the resulting vector field and graphs, as well as computations of metrics.
 
 ## Dependence on packages
 
 Run `pip3 install -r requirements.txt`
 to install all the required packages.
-
-## Example
-
-An example for demonstration can be found from `Scripts/Demo.ipynb`. It provides details for running the algorithm, visualizing the resulting vector field and graphs, as well as computations of metrics.
 
 ## Reproduce results
 
