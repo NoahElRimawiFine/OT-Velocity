@@ -6,7 +6,7 @@ from Fused Gromov-Wasserstein OT,
 import numpy as np
 from scipy.optimize.linesearch import scalar_search_armijo
 from ot.lp import emd
-from utils import *
+from .utils import *
 
 def gwlossTensor(constC,hC1,hC2,T):
 	"""

@@ -4,14 +4,12 @@ import pandas as pd
 import sys
 import os
 
-import utils_Velo
-
-from utils_Velo import solve_velocities, visualize_pca, solve_prior, OT_lagged_correlation
+from .utils_Velo import solve_velocities, visualize_pca, solve_prior, OT_lagged_correlation
 #from my_utils_Velo import solve_velocities, OT_lagged_correlation
 import copy
 
 
-from utils import *
+from .utils import *
 import scipy
 import matplotlib.pyplot as plt
 
@@ -19,6 +17,7 @@ import numpy as np
 import pandas as pd
 import sys
 import sklearn
+import torch
 
 #from my_utils_Velo import *
 

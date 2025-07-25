@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 #from agw_scootr import *
 #from agw_scootr_nogw import *
-from utils import *
+from .utils import *
 from scipy.spatial import distance
 from scipy.spatial.distance import cdist
 from scipy.sparse.csgraph import dijkstra

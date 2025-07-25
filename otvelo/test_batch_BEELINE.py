@@ -7,11 +7,11 @@ import os
 
 #from coot_torch import *
 #from my_utils_Velo import *
-from utils_Velo import solve_velocities, visualize_pca, solve_prior, OT_lagged_correlation
+from .utils_Velo import solve_velocities, visualize_pca, solve_prior, OT_lagged_correlation
 import copy
 
 #from agw_scootr import *
-from utils import *
+from .utils import *
 import scipy
 import matplotlib.pyplot as plt
 
@@ -21,7 +21,6 @@ import sys
 import sklearn
 
 #from agw_scootr import *
-from utils import *
 import scipy
 import matplotlib.pyplot as plt
 import evaluation_metrics
